@@ -4,12 +4,16 @@ import com.leucotron.api.entity.Consulta;
 import com.leucotron.api.entity.Medico;
 import com.leucotron.api.entity.dto.AgendamentoConsultaDTO;
 import com.leucotron.api.entity.dto.CancelamentoConsultaDTO;
+import com.leucotron.api.entity.dto.ConsultaDetalhamentoDTO;
 import com.leucotron.api.infra.exceptions.ValidacaoException;
 import com.leucotron.api.repositories.ConsultaRepository;
 import com.leucotron.api.repositories.MedicoRepository;
 import com.leucotron.api.repositories.PacienteRepository;
+import com.leucotron.api.validadores.ValidadorAgendamentoDeConsultas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AgendamentoConsultaService {
@@ -23,7 +27,10 @@ public class AgendamentoConsultaService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    public void agenda(AgendamentoConsultaDTO agendamentoDTO) {
+    @Autowired
+    private List<ValidadorAgendamentoDeConsultas> validadores;
+
+    public ConsultaDetalhamentoDTO agenda(AgendamentoConsultaDTO agendamentoDTO) {
 
         if (!pacienteRepository.existsById(agendamentoDTO.idPaciente())) {
             throw new ValidacaoException("Não existe paciente com o ID informado!");
@@ -33,11 +40,16 @@ public class AgendamentoConsultaService {
             throw new ValidacaoException("Não existe medico com o ID informado!");
         }
 
+        validadores.forEach(v -> v.validar(agendamentoDTO));
+
         var medico = escolherMedico(agendamentoDTO);
         var paciente = pacienteRepository.getReferenceById(agendamentoDTO.idPaciente());
 
-        consultaRepository.save(new Consulta(null, medico, paciente, agendamentoDTO.data(), null));
+        var consulta = new Consulta(null, medico, paciente, agendamentoDTO.data(), null);
 
+        consultaRepository.save(consulta);
+
+        return new ConsultaDetalhamentoDTO(consulta);
     }
 
     private Medico escolherMedico(AgendamentoConsultaDTO agendamentoDTO) {
@@ -45,15 +57,20 @@ public class AgendamentoConsultaService {
             return medicoRepository.getReferenceById(agendamentoDTO.idMedico());
         }
 
-        if (agendamentoDTO.especialidade() == null){
+        if (agendamentoDTO.especialidade() == null) {
             throw new ValidacaoException("Especialidade é obrigatória quando médico não foi informado!");
         }
 
-        return medicoRepository.escolheMedicoAleatorioLivreNaData(agendamentoDTO.especialidade(), agendamentoDTO.data());
+        var medicoEscolhido = medicoRepository.escolheMedicoAleatorioLivreNaData(agendamentoDTO.especialidade(), agendamentoDTO.data());
+        if (medicoEscolhido == null) {
+            throw new ValidacaoException("Não foi encontrado médico com essa especialidade no horario escolhido!");
+        }
+
+        return medicoEscolhido;
     }
 
     public void cancelamento(CancelamentoConsultaDTO cancelamentoConsultaDTO) {
-        if(!consultaRepository.existsById(cancelamentoConsultaDTO.idConsulta())){
+        if (!consultaRepository.existsById(cancelamentoConsultaDTO.idConsulta())) {
             throw new ValidacaoException("Não existe consulta agendada com o ID informado!");
         }
 
