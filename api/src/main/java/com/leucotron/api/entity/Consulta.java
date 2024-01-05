@@ -1,5 +1,6 @@
 package com.leucotron.api.entity;
 
+import com.leucotron.api.entity.enums.MotivoCancelamento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -29,4 +30,11 @@ public class Consulta {
 
     private LocalDateTime data;
 
+    @Column(name = "motivo_cancelamento")
+    @Enumerated(EnumType.STRING)
+    private MotivoCancelamento motivoCancelamento;
+
+    public void cancelaAgendamento(MotivoCancelamento motivoCancelamento) {
+        this.motivoCancelamento = motivoCancelamento;
+    }
 }

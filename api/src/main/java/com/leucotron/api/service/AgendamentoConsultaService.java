@@ -3,6 +3,7 @@ package com.leucotron.api.service;
 import com.leucotron.api.entity.Consulta;
 import com.leucotron.api.entity.Medico;
 import com.leucotron.api.entity.dto.AgendamentoConsultaDTO;
+import com.leucotron.api.entity.dto.CancelamentoConsultaDTO;
 import com.leucotron.api.infra.exceptions.ValidacaoException;
 import com.leucotron.api.repositories.ConsultaRepository;
 import com.leucotron.api.repositories.MedicoRepository;
@@ -35,7 +36,7 @@ public class AgendamentoConsultaService {
         var medico = escolherMedico(agendamentoDTO);
         var paciente = pacienteRepository.getReferenceById(agendamentoDTO.idPaciente());
 
-        consultaRepository.save(new Consulta(null, medico, paciente, agendamentoDTO.data()));
+        consultaRepository.save(new Consulta(null, medico, paciente, agendamentoDTO.data(), null));
 
     }
 
@@ -49,5 +50,14 @@ public class AgendamentoConsultaService {
         }
 
         return medicoRepository.escolheMedicoAleatorioLivreNaData(agendamentoDTO.especialidade(), agendamentoDTO.data());
+    }
+
+    public void cancelamento(CancelamentoConsultaDTO cancelamentoConsultaDTO) {
+        if(!consultaRepository.existsById(cancelamentoConsultaDTO.idConsulta())){
+            throw new ValidacaoException("Não existe consulta agendada com o ID informado!");
+        }
+
+        var consulta = consultaRepository.getReferenceById(cancelamentoConsultaDTO.idConsulta());
+        consulta.cancelaAgendamento(cancelamentoConsultaDTO.motivoCancelamento());
     }
 }
