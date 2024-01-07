@@ -9,7 +9,8 @@ import com.leucotron.api.infra.exceptions.ValidacaoException;
 import com.leucotron.api.repositories.ConsultaRepository;
 import com.leucotron.api.repositories.MedicoRepository;
 import com.leucotron.api.repositories.PacienteRepository;
-import com.leucotron.api.validadores.ValidadorAgendamentoDeConsultas;
+import com.leucotron.api.validadores.agendamento.ValidadorAgendamentoDeConsultas;
+import com.leucotron.api.validadores.cancelamento.ValidadorCancelamentoDeConsultas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,12 @@ public class AgendamentoConsultaService {
     private PacienteRepository pacienteRepository;
 
     @Autowired
-    private List<ValidadorAgendamentoDeConsultas> validadores;
+    private List<ValidadorAgendamentoDeConsultas> validadoresAgendamento;
 
-    public ConsultaDetalhamentoDTO agenda(AgendamentoConsultaDTO agendamentoDTO) {
+    @Autowired
+    private List<ValidadorCancelamentoDeConsultas> validadoresCancelamnto;
+
+    public ConsultaDetalhamentoDTO agendar(AgendamentoConsultaDTO agendamentoDTO) {
 
         if (!pacienteRepository.existsById(agendamentoDTO.idPaciente())) {
             throw new ValidacaoException("Não existe paciente com o ID informado!");
@@ -40,7 +44,7 @@ public class AgendamentoConsultaService {
             throw new ValidacaoException("Não existe medico com o ID informado!");
         }
 
-        validadores.forEach(v -> v.validar(agendamentoDTO));
+        validadoresAgendamento.forEach(v -> v.validar(agendamentoDTO));
 
         var medico = escolherMedico(agendamentoDTO);
         var paciente = pacienteRepository.getReferenceById(agendamentoDTO.idPaciente());
@@ -69,10 +73,12 @@ public class AgendamentoConsultaService {
         return medicoEscolhido;
     }
 
-    public void cancelamento(CancelamentoConsultaDTO cancelamentoConsultaDTO) {
+    public void cancelar(CancelamentoConsultaDTO cancelamentoConsultaDTO) {
         if (!consultaRepository.existsById(cancelamentoConsultaDTO.idConsulta())) {
             throw new ValidacaoException("Não existe consulta agendada com o ID informado!");
         }
+
+        validadoresCancelamnto.forEach(v -> v.validar(cancelamentoConsultaDTO));
 
         var consulta = consultaRepository.getReferenceById(cancelamentoConsultaDTO.idConsulta());
         consulta.cancelaAgendamento(cancelamentoConsultaDTO.motivoCancelamento());

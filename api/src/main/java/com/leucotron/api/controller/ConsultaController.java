@@ -20,7 +20,7 @@ public class ConsultaController {
     @Transactional
     public ResponseEntity agendar(@RequestBody @Valid AgendamentoConsultaDTO agendamentoDTO) {
 
-        var consultaDetalhamentoDTO = agendamentoConsultaService.agenda(agendamentoDTO);
+        var consultaDetalhamentoDTO = agendamentoConsultaService.agendar(agendamentoDTO);
 
         return ResponseEntity.ok(consultaDetalhamentoDTO);
     }
@@ -29,7 +29,7 @@ public class ConsultaController {
     @Transactional
     public ResponseEntity cancelar(@RequestBody @Valid CancelamentoConsultaDTO cancelamentoConsultaDTO) {
 
-        agendamentoConsultaService.cancelamento(cancelamentoConsultaDTO);
+        agendamentoConsultaService.cancelar(cancelamentoConsultaDTO);
 
         return ResponseEntity.noContent().build();
     }

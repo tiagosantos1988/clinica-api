@@ -1,4 +1,4 @@
-package com.leucotron.api.validadores;
+package com.leucotron.api.validadores.agendamento;
 
 import com.leucotron.api.entity.dto.AgendamentoConsultaDTO;
 import com.leucotron.api.infra.exceptions.ValidacaoException;
