@@ -6,6 +6,7 @@ import com.leucotron.api.entity.dto.MedicoDetalhamentoDTO;
 import com.leucotron.api.entity.dto.MedicoListagemDTO;
 import com.leucotron.api.entity.dto.MedicoUpdateDTO;
 import com.leucotron.api.repositories.MedicoRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("medico")
+@SecurityRequirement(name = "bearer-key")
 public class MedicoController {
 
     @Autowired
