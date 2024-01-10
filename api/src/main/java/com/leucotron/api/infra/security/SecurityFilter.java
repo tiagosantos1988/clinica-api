@@ -1,7 +1,6 @@
 package com.leucotron.api.infra.security;
 
-import com.leucotron.api.repositories.UsuarioRepository;
-import com.leucotron.api.service.LoginService;
+import com.leucotron.api.domain.usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,11 +1,11 @@
 package com.leucotron.api.controller;
 
-import com.leucotron.api.entity.Paciente;
-import com.leucotron.api.entity.dto.PacienteCadastroDTO;
-import com.leucotron.api.entity.dto.PacienteDetalhamentoDTO;
-import com.leucotron.api.entity.dto.PacienteListagemDTO;
-import com.leucotron.api.entity.dto.PacienteUpdateDTO;
-import com.leucotron.api.repositories.PacienteRepository;
+import com.leucotron.api.domain.paciente.Paciente;
+import com.leucotron.api.domain.paciente.PacienteCadastroDTO;
+import com.leucotron.api.domain.paciente.PacienteDetalhamentoDTO;
+import com.leucotron.api.domain.paciente.PacienteListagemDTO;
+import com.leucotron.api.domain.paciente.PacienteUpdateDTO;
+import com.leucotron.api.domain.paciente.PacienteRepository;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.leucotron.api.controller;
 
-import com.leucotron.api.entity.Usuario;
-import com.leucotron.api.entity.dto.LoginDTO;
-import com.leucotron.api.entity.dto.TokenJwtDTO;
+import com.leucotron.api.domain.usuario.Usuario;
+import com.leucotron.api.domain.usuario.LoginDTO;
+import com.leucotron.api.domain.usuario.TokenJwtDTO;
 import com.leucotron.api.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

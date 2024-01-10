@@ -1,8 +1,8 @@
 package com.leucotron.api.controller;
 
-import com.leucotron.api.entity.dto.AgendamentoConsultaDTO;
-import com.leucotron.api.entity.dto.CancelamentoConsultaDTO;
-import com.leucotron.api.service.AgendamentoConsultaService;
+import com.leucotron.api.domain.consulta.AgendamentoConsultaDTO;
+import com.leucotron.api.domain.consulta.CancelamentoConsultaDTO;
+import com.leucotron.api.domain.consulta.AgendamentoConsultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
